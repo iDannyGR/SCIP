@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+Table users {
+  id number [primary key] 
+  name varchar(100) [not null]
+  email varchar(100) [unique, not null]
+  password varchar(255) [not null]  
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  delete_at timestamp [default:null]
+}
+
+Table employees {
+  id number [primary key]
+  first_name varchar(100) [not null]
+  last_name varchar(100) [not null]
+  employee_code varchar(20) [unique, not null]
+  department varchar(100) [not null]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  delete_at timestamp [default:null]
+
+}
+
+Table permission_types {
+  id number [primary key]
+  type_name varchar(50) [unique, not null] 
+}
+
+Table permissions {
+  id number [primary key]
+  employee_id number [not null] 
+  permission_type_id number [not null] 
+  start_date DATE [not null]
+  end_date DATE [not null]  
+  start_time TIME 
+  end_time TIME  
+  created_by number [not null]  
+  created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+  delete_at TIMESTAMP [default:null]
+
+}
+
+
+Ref: permissions.id > users.id // many-to-one
+
+Ref: users.id < follows.following_user_id
+
+Ref: users.id < follows.followed_user_id
