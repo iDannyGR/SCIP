@@ -13,49 +13,89 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Roles  {
+  Admin
+  Creator
+} 
 
-Table users {
-  id number [primary key] 
-  name varchar(100) [not null]
-  email varchar(100) [unique, not null]
-  password varchar(255) [not null]  
-  created_at timestamp [default: `CURRENT_TIMESTAMP`]
-  delete_at timestamp [default:null]
-}
-
-Table employees {
-  id number [primary key]
-  first_name varchar(100) [not null]
-  last_name varchar(100) [not null]
-  employee_code varchar(20) [unique, not null]
-  department varchar(100) [not null]
-  created_at timestamp [default: `CURRENT_TIMESTAMP`]
-  delete_at timestamp [default:null]
+model Organization {
+  id        Int @id @default(autoincrement())
+  name      String @unique
+  website   String?
+  phone     String
+  createAt  DateTime  @default(now())
+  updateAt  DateTime  @updatedAt
+  deleteAt  DateTime? 
 
 }
 
-Table permission_types {
-  id number [primary key]
-  type_name varchar(50) [unique, not null] 
+model User{
+  id        Int @id @default(autoincrement())
+  email     String    @unique
+  firstName String
+  lastName  String
+  password  String
+  position  Position?
+  role      Roles
+  createAt  DateTime  @default(now())
+  updateAt  DateTime   @updatedAt
+  deleteAt  DateTime?
 }
 
-Table permissions {
-  id number [primary key]
-  employee_id number [not null] 
-  permission_type_id number [not null] 
-  start_date DATE [not null]
-  end_date DATE [not null]  
-  start_time TIME 
-  end_time TIME  
-  created_by number [not null]  
-  created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
-  delete_at TIMESTAMP [default:null]
-
+model Position {
+  id        Int @id @default(autoincrement())
+  name      String @unique
+  createAt  DateTime  @default(now())
+  updateAt  DateTime   @updatedAt
+  deleteAt  DateTime?
+  employees Employees[]
+  user      User @relation(fields: [userId], references: [id])
+  userId    Int @unique
 }
 
 
-Ref: permissions.id > users.id // many-to-one
+model Employees {
+  id        Int @id @default(autoincrement())
+  email     String @unique
+  firstName String
+  lastName  String
+  position  Position @relation(fields: [positionId], references: [id])
+  positionId Int
+  area Area @relation(fields: [areaId], references: [id])
+  areaId Int
+  licenses  Licenses[]
+  createAt  DateTime  @default(now())
+  updateAt  DateTime   @updatedAt
+  deleteAt  DateTime?
+}
 
-Ref: users.id < follows.following_user_id
+model Area {
+  id        Int @id @default(autoincrement())
+  name      String @unique
+  code      String?
+  createAt  DateTime  @default(now())
+  updateAt  DateTime   @updatedAt
+  deleteAt  DateTime? 
+  employees Employees[]
+}
 
-Ref: users.id < follows.followed_user_id
+model Licenses {
+  id  Int @id @default(autoincrement())
+  authorId Int 
+  author Employees @relation(fields: [authorId], references: [id])
+  licenseTypes licenseTypes @relation(fields: [licenceTypeId], references: [id]) 
+  licenceTypeId Int @unique
+  startDate DateTime
+  endDate DateTime
+  startTime DateTime?
+  endTime DateTime?
+  createAt  DateTime  @default(now())
+  updateAt  DateTime   @updatedAt
+  deleteAt  DateTime? 
+}
+
+model licenseTypes{
+  id Int @id @default(autoincrement())
+  type String
+  licence Licenses?
+}
