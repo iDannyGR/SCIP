@@ -16,6 +16,7 @@ datasource db {
 enum Roles  {
   Admin
   Creator
+  Employee
 } 
 
 model Organization {
@@ -29,14 +30,17 @@ model Organization {
 
 }
 
-model User{
+model Employee {
   id        Int @id @default(autoincrement())
-  email     String    @unique
+  email     String @unique
   firstName String
   lastName  String
-  password  String
-  position  Position?
+  position  Position @relation(fields: [positionId], references: [id])
+  positionId Int
+  area Area @relation(fields: [areaId], references: [id])
+  areaId    Int
   role      Roles
+  licenses  License[]
   createAt  DateTime  @default(now())
   updateAt  DateTime   @updatedAt
   deleteAt  DateTime?
@@ -48,26 +52,12 @@ model Position {
   createAt  DateTime  @default(now())
   updateAt  DateTime   @updatedAt
   deleteAt  DateTime?
-  employees Employees[]
+  employees Employee[]
   user      User @relation(fields: [userId], references: [id])
   userId    Int @unique
 }
 
 
-model Employees {
-  id        Int @id @default(autoincrement())
-  email     String @unique
-  firstName String
-  lastName  String
-  position  Position @relation(fields: [positionId], references: [id])
-  positionId Int
-  area Area @relation(fields: [areaId], references: [id])
-  areaId Int
-  licenses  Licenses[]
-  createAt  DateTime  @default(now())
-  updateAt  DateTime   @updatedAt
-  deleteAt  DateTime?
-}
 
 model Area {
   id        Int @id @default(autoincrement())
@@ -76,15 +66,15 @@ model Area {
   createAt  DateTime  @default(now())
   updateAt  DateTime   @updatedAt
   deleteAt  DateTime? 
-  employees Employees[]
+  employees Employee[]
 }
 
-model Licenses {
+model License {
   id  Int @id @default(autoincrement())
   authorId Int 
-  author Employees @relation(fields: [authorId], references: [id])
+  author Employee @relation(fields: [authorId], references: [id])
   licenseTypes licenseTypes @relation(fields: [licenceTypeId], references: [id]) 
-  licenceTypeId Int @unique
+  licenceTypeId Int
   startDate DateTime
   endDate DateTime
   startTime DateTime?
@@ -97,5 +87,5 @@ model Licenses {
 model licenseTypes{
   id Int @id @default(autoincrement())
   type String
-  licence Licenses?
+  licence License[]
 }
