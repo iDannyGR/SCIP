@@ -7,17 +7,15 @@ services:
       - .env
     ports:
      - "3001-3001"
-  postgres:
-    image: postgres
+  db:
+    image: mariadb
     restart: always
-    ports:
-      - 5432:5432
     environment:
-      - DATABASE_HOST=127.0.0.1
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=notes-db 
+          MARIADB_USER: root
+          MARIADB_PASSWORD: $MARIADB_ROOT_PASSWORD
+          MARIADB_DATABASE: scip_db
+          MARIADB_ROOT_PASSWORD: $MARIADB_ROOT_PASSWORD
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mariadb_data: /var/lib/mysql
 volumes:
-  postgres_data:
+  mariadb_data:
