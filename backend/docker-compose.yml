@@ -2,20 +2,34 @@ name: scipBackend
 services:
   api: 
     container_name: scipBackend 
-    build: .\
+    build: .
     env_file:
       - .env
     ports:
-     - "3001-3001"
+      - "3001:3001"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "mysql://root:${MARIADB_ROOT_PASSWORD}@db:3306/scip_db"
+    networks:
+      - app-network
+
   db:
-    image: mariadb
+    image: mariadb:latest
+    container_name: scipDB
     restart: always
     environment:
-          MARIADB_USER: root
-          MARIADB_PASSWORD: $MARIADB_ROOT_PASSWORD
-          MARIADB_DATABASE: scip_db
-          MARIADB_ROOT_PASSWORD: $MARIADB_ROOT_PASSWORD
+      MARIADB_DATABASE: scip_db
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    ports: 
+      - "3306:3306"
     volumes:
-      - mariadb_data: /var/lib/mysql
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
 volumes:
   mariadb_data:
