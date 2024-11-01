@@ -1,4 +1,3 @@
-import { PartialType } from '@nestjs/mapped-types';
 import { IsFQDN, IsNotEmpty, Length } from 'class-validator';
 
 export class CreateOrganizationDto {

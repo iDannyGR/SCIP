@@ -1,30 +1,41 @@
-import { Controller, Post, Body } from '@nestjs/common';
-import { CreateAreaDto } from './Dto';
-import { AreaService } from "./area.service";
+import {
+  Controller,
+  Post,
+  Body,
+  Delete,
+  Put,
+  Param,
+  Get,
+} from '@nestjs/common';
+import { CreateAreaDto, UpdateAreaDto } from './Dto';
+import { AreaService } from './area.service';
 
 @Controller('area')
 export class AreaController {
   constructor(private readonly areaService: AreaService) {}
 
-  async getOrganization() {
-    return await this.organizationService.getOrganization();
+  @Get()
+  async findAllArea() {
+    return await this.areaService.findAll();
+  }
+
+  @Get(':id')
+  async finOneArea(@Param('id') id: string) {
+    return await this.areaService.findOne(+id);
   }
 
   @Post()
-  async createOrganization(@Body() data: CreateOrganizationDto) {
-    return await this.organizationService.createOrganization(data);
+  async createArea(@Body() data: CreateAreaDto) {
+    return await this.areaService.create(data);
   }
 
   @Delete(':id')
-  async deleteOrganization(@Param('id') id: string) {
-    return await this.organizationService.deleteOrganization(Number(id));
+  async deleteArea(@Param('id') id: string) {
+    return await this.areaService.remove(Number(id));
   }
 
   @Put(':id')
-  async updateOrganization(
-    @Param('id') id: string,
-    @Body() data: UpdateOrganization,
-  ) {
-    return await this.organizationService.updateOrganization(Number(id), data);
+  async updateArea(@Param('id') id: string, @Body() data: UpdateAreaDto) {
+    return await this.areaService.update(Number(id), data);
   }
 }

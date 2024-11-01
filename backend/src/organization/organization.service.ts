@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateOrganizationDto, UpdateOrganization } from './Dto';
+import { CreateOrganizationDto, UpdateOrganizationDto } from './Dto';
 import { PrismaService } from 'src/services/prisma/prisma.service';
 
 @Injectable()
 export class OrganizationService {
-
   constructor(private prisma: PrismaService) {}
 
   async getOrganization(): Promise<CreateOrganizationDto[]> {
@@ -13,11 +12,16 @@ export class OrganizationService {
     return data;
   }
 
-  async createOrganization(data: CreateOrganizationDto): Promise<CreateOrganizationDto> {
+  async createOrganization(
+    data: CreateOrganizationDto,
+  ): Promise<CreateOrganizationDto> {
     return await this.prisma.organization.create({ data });
   }
 
-  async updateOrganization(id: number, data: UpdateOrganization): Promise<CreateOrganizationDto> {
+  async updateOrganization(
+    id: number,
+    data: UpdateOrganizationDto,
+  ): Promise<CreateOrganizationDto> {
     try {
       return await this.prisma.organization.update({
         where: { id },
@@ -38,5 +42,3 @@ export class OrganizationService {
     }
   }
 }
-
-
