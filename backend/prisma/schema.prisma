@@ -41,6 +41,7 @@ model Employee {
   areaId    Int
   role      Roles
   licenses  License[]
+  usage     LicenseUsage[]
   createAt  DateTime  @default(now())
   updateAt  DateTime   @updatedAt
   deleteAt  DateTime?
@@ -83,5 +84,19 @@ model License {
 model licenseType{
   id Int @id @default(autoincrement())
   type String
-  licence License[]
+  description String?
+  isActive Boolean @default(true)
+  hourLimit  Int
+  licences License[]
+  usage LicenseUsage[]
+}
+
+model LicenseUsage {
+  id           Int        @id @default(autoincrement())
+  employeeId   Int
+  employee     Employee   @relation(fields: [employeeId], references: [id])
+  licenseTypeId Int
+  licenseType  licenseType @relation(fields: [licenseTypeId], references: [id])
+  hoursUsed    Int        // Horas acumuladas de este tipo de licencia
+  createAt     DateTime   @default(now())
 }
