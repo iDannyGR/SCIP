@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PositionDto } from './dto/create-position.dto';
 import { PrismaService } from 'src/services/prisma/prisma.service';
 
@@ -6,23 +6,32 @@ import { PrismaService } from 'src/services/prisma/prisma.service';
 export class PositionService {
   constructor(private readonly prisma: PrismaService){}
   
-  async create(createPositionDto: PositionDto) {
-    return await this.prisma.position.create(createPositionDto);
+  async create(data: PositionDto) : Promise<PositionDto> {
+    return await this.prisma.position.create({data});
   }
 
-  async findAll() {
+  async findAll() : Promise<PositionDto[]> {
     return await this.prisma.position.findMany();
   }
 
    async findOne(id: number) {
-    return await this.prisma.position.findUnique(id);
+      const data = await this.prisma.position.findUnique({where:{id}});
+      
+      if(!data) throw new NotFoundException('wrong id data');
+      
+      return data
+    
   }
 
-  update(id: number, updatePositionDto: PositionDto) {
-    return `This action updates a #${id} position`;
+  async update(id: number, data: PositionDto):Promise<PositionDto> {
+    try {
+      return await this.prisma.position.update( {where: {id}, data} ) ;
+    } catch (error) {
+        throw new NotFoundException(`wrong ${id} data error: ${error}`);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} position`;
+  async remove(id: number):Promise<PositionDto> {
+    return await this.prisma.position.delete({where:{id}});
   }
 }

@@ -31,11 +31,11 @@ export class AreaController {
 
   @Delete(':id')
   async deleteArea(@Param('id') id: string) {
-    return await this.areaService.remove(Number(id));
+    return await this.areaService.remove(+id);
   }
 
   @Put(':id')
   async updateArea(@Param('id') id: string, @Body() data: UpdateAreaDto) {
-    return await this.areaService.update(Number(id), data);
+    return await this.areaService.update(+id, data);
   }
 }
