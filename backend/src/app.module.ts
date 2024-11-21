@@ -4,9 +4,11 @@ import { OrganizationModule } from './organization/organization.module';
 import { PositionModule } from './position/position.module';
 import { EmployeeResolver } from './employee/employee.resolver';
 import { EmployeeModule } from './employee/employee.module';
+import { LicenceModule } from './licence/licence.module';
+import { LicenceModule } from './licence/licence.module';
 
 @Module({
-  imports: [AreaModule, OrganizationModule, PositionModule, EmployeeModule],
+  imports: [AreaModule, OrganizationModule, PositionModule, EmployeeModule, LicenceModule],
   controllers: [],
   providers: [EmployeeResolver],
 })

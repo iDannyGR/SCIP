@@ -3,27 +3,29 @@ import { $Enums } from '@prisma/client';
 
 
 export class CreateEmployeeDto {
-    @IsString()
-    @IsEmail()
-    @IsNotEmpty({ message: 'please enter a complete name of area' })
-    email: String
-    
-    @IsString()
-    @IsEmail()
-    @IsNotEmpty({ message: 'please enter your first name' })
-    firstName:String
+  @IsString()
+  @IsEmail()
+  @IsNotEmpty({ message: 'please enter a complete name of area' })
+  email: string;
 
-    @IsString()
-    @IsNotEmpty({ message: 'please enter your last name' })
-    lastName:String
-    
-    @IsNumber()
-    @IsNotEmpty({ message: 'Select a Position' })
-    positionId:Number
-    
-    @IsNumber()
-    @IsNotEmpty({ message: 'Select Area' })
-    areaId:Number
+  @IsString()
+  @IsEmail()
+  @IsNotEmpty({ message: 'please enter your first name' })
+  firstName: string;
 
-    role: $Enums.Roles
+  @IsString()
+  @IsNotEmpty({ message: 'please enter your last name' })
+  lastName: string;
+
+  @IsNumber()
+  @IsNotEmpty({ message: 'Select a Position' })
+  positionId: number;
+
+  @IsNumber()
+  @IsNotEmpty({ message: 'Select Area' })
+  areaId: number;
+  
+  @IsNotEmpty()
+  @IsString()
+  role: $Enums.Roles;
 }
